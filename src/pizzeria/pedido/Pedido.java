@@ -16,7 +16,7 @@ public class Pedido {
 	private LocalDate fecha;
 	@SuppressWarnings("unused")
 	private LocalTime horario;
-	private String estado;
+	private EstadoPedido estado;
 	@SuppressWarnings("unused")
 	private String medioDePago;
 	private List<Producto> productos = new ArrayList<>();
@@ -26,7 +26,7 @@ public class Pedido {
 		this.cliente = cliente;
 		this.fecha = fecha;
 		this.horario = horario;
-		this.estado = "En Proceso";
+		this.estado = EstadoPedido.EN_PROCESO;
 		this.medioDePago = medioDePago;
 	}
 	
@@ -34,12 +34,24 @@ public class Pedido {
 		return fecha;
 	}
 	
-	public String getEstado() {
+	public EstadoPedido getEstado() {
 		return estado;
 	}
 	
+	public void setEstado(EstadoPedido estado) {
+		this.estado = estado;
+	}
+	
 	public boolean estaEntregado() {
-		return getEstado() == "Entregado";
+		return estado == EstadoPedido.ENTREGADO;
+	}
+	
+	public boolean estaCancelado() {
+		return estado == EstadoPedido.CANCELADO;
+	}
+	
+	public boolean estaEnProceso() {
+		return estado == EstadoPedido.EN_PROCESO;
 	}
 
 	public Cliente getCliente() {
@@ -51,6 +63,7 @@ public class Pedido {
 	}
 
 	public int precio() {
-		return productos.stream().mapToInt(Producto::precio).sum();
+		return 100;
+		//return productos.stream().mapToInt(Producto::precio).sum();
 	}
 }

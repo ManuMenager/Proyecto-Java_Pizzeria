@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import pizzeria.cliente.Cliente;
 import pizzeria.empleado.Empleado;
+import pizzeria.pedido.EstadoPedido;
 import pizzeria.pedido.Pedido;
 import pizzeria.producto.Producto;
 
@@ -50,12 +51,24 @@ public class Pizzeria {
 		return empleados.size();
 	}
 	
-	public Set<Pedido> pedidosEnEstado(String estado) {
-	    if (estado.equals("Entregado")) {
-	        return pedidos.stream().filter(Pedido::estaEntregado).collect(Collectors.toCollection(HashSet::new));
-	    } else {
-	        return pedidos.stream().filter(pedido -> !pedido.estaEntregado()).collect(Collectors.toCollection(HashSet::new));
-	    }
+	public void tomarPedido(Pedido pedido) {
+		pedidos.add(pedido);
+	}
+	
+	public void entregarPedido(Pedido pedido) {
+		pedido.setEstado(EstadoPedido.ENTREGADO);
+		dineroEnCaja += pedido.precio();
+	}
+	
+	public void cancelarPedido(Pedido pedido) {
+		pedido.setEstado(EstadoPedido.CANCELADO);
+		dineroEnCaja -= pedido.precio();
+	}
+	
+	public Set<Pedido> pedidosEnEstado(EstadoPedido estado) {
+	    return pedidos.stream()
+	    				.filter(pedido -> pedido.getEstado() == estado)
+	    				.collect(Collectors.toCollection(HashSet::new));
 	}
 	
 	public int cantidadDePedidosElDia(LocalDate dia) {
@@ -63,21 +76,17 @@ public class Pizzeria {
 	}
 	
 	private Set<Pedido> pedidosElDia(LocalDate dia) {
-		return pedidos.stream().filter(pedido -> pedido.getFecha().equals(dia)).collect(Collectors.toCollection(HashSet::new));
+		return pedidos.stream()
+						.filter(pedido -> pedido.getFecha().equals(dia))
+						.collect(Collectors.toCollection(HashSet::new));
 	}
 	
 	public int cantidadDePedidosTotal() {
 		return pedidos.size();
 	}
 	
-	public void tomarPedido(Pedido pedido) {
-		pedidos.add(pedido);
-		dineroEnCaja += pedido.precio();
-	}
-	
-	public void quitarPedido(Pedido pedido) {
-		pedidos.remove(pedido);
-		dineroEnCaja -= pedido.precio();
+	public Set<Producto> getMenu() {
+		return menu;
 	}
 	
 	public void agregarProductoMenu(Producto producto) {
@@ -89,14 +98,16 @@ public class Pizzeria {
 	}
 	
 	public Set<Pedido> pedidosDelCliente(Cliente cliente) {
-		return pedidos.stream().filter(pedido -> pedido.getCliente().equals(cliente)).collect(Collectors.toCollection(HashSet::new));
+		return pedidos.stream()
+						.filter(pedido -> pedido.getCliente().equals(cliente))
+						.collect(Collectors.toCollection(HashSet::new));
 	}
 	
 	public Map<Integer, Long> productosMasVendidos() {
 		return pedidos.stream()
-				.filter(pedido -> pedido.estaEntregado())
-				.flatMap(pedido -> pedido.getProductos().stream())
-				.collect(Collectors.groupingBy(Producto::getId, Collectors.counting()));
+						.filter(pedido -> pedido.estaEntregado())
+						.flatMap(pedido -> pedido.getProductos().stream())
+						.collect(Collectors.groupingBy(Producto::getId, Collectors.counting()));
 	}
 	
 }
