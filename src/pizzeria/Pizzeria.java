@@ -6,10 +6,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import pizzeria.cliente.Cliente;
-import pizzeria.empleado.Empleado;
 import pizzeria.pedido.EstadoPedido;
 import pizzeria.pedido.Pedido;
+import pizzeria.persona.Cliente;
+import pizzeria.persona.Empleado;
 import pizzeria.producto.Producto;
 
 public class Pizzeria {

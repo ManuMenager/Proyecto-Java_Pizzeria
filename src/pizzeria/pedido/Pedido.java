@@ -5,7 +5,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import pizzeria.cliente.Cliente;
+import pizzeria.persona.Cliente;
 import pizzeria.producto.Producto;
 
 public class Pedido {
